@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	margin: 100px auto;
+	width: 200px;
+	height: 200px;
+	background: red;
+	font-size: 20px;
+	color: #fff;
+}	
+</style>
+</head>
+<body>
+<div id="box">上</div>
+<!--
+gesture:
+	 gesturestart 	当前事件触发时，屏幕上有两根或者两根以上的手指
+	 gesturechange
+		触发了gesturestart 之后， 手指坐标发生变化
+	 gestureend
+	 	触发了gesturestart 之后，手指抬起
+安卓下没有gesture事件	
+-->
+<script type="text/javascript" src="js/m.touch.js"></script>
+<script type="text/javascript">
+document.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+/*
+init:{
+	el: 元素,
+	start:fn,
+	change:fn,
+	end:fn
+}
+*/
+(function(){
+	var box = document.querySelector('#box');
+	var startDeg = 0;
+	var startScale = 0;
+	css(box,"rotate",0);
+	css(box,"scale",100);
+	gesture({
+		el:box,
+		start: function(e){
+			startScale = css(box,"scale")/100;
+			startDeg = css(box,"rotate");
+			this.style.background = "blue";
+		},
+		change: function(e){
+			css(this,"scale",(e.scale * startScale)*100);
+			this.innerHTML = e.rotation;
+			css(box,"rotate",e.rotation + startDeg);
+		},
+		end: function(e){
+			this.style.background = "red";
+		}
+	});
+})();
+function gesture(init){
+	var el = init.el;
+	var isGesture = false;
+	var startDis = 0;
+	var startDeg = 0;
+	el.addEventListener('touchstart', function(e) {
+	 	if(e.touches.length >= 2){
+	 		startDis = getDis(e.touches[0],e.touches[1]);
+	 		startDeg = getDeg(e.touches[0],e.touches[1]);
+	 		isGesture = true;
+	 		init.start&&init.start.call(el,e);
+	 	}
+	}); 
+	el.addEventListener('touchmove', function(e) {
+	 	if(isGesture&&e.touches.length >= 2){
+	 		isGesture = true;
+	 		var nowDis = getDis(e.touches[0],e.touches[1]);
+	 		var nowDeg = getDeg(e.touches[0],e.touches[1]);
+	 		e.scale = nowDis/startDis;//缩放值
+	 		e.rotation = nowDeg - startDeg;
+	 		init.change&&init.change.call(el,e);
+	 	}
+	}); 
+	el.addEventListener('touchend', function(e) {
+	 	if(isGesture){
+	 		init.end&&init.end.call(el,e);
+	 	}
+	 	isGesture = false;
+	}); 
+}	
+function getDis(Point,Point2){
+	return Math.sqrt((Point.pageX - Point2.pageX)*(Point.pageX - Point2.pageX) + (Point.pageY - Point2.pageY)*(Point.pageY - Point2.pageY));
+}
+function getDeg(Point,Point2){
+	var y = Point.pageY - Point2.pageY;
+	var x = Point.pageX - Point2.pageX;
+	return Math.atan2(y,x)/Math.PI*180;
+}
+</script>
+</body>
+</html>
