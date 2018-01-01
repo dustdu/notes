@@ -13,19 +13,46 @@
 		- > 修改wampmanager.ini文件时：Type: item; Caption: "Demo 目录"; Action: shellexecute; FileName:"E:/Demo";
 	> 修改wampmanager.tpl文件时：Type: item; Caption: "${Demo Directory}"; Action: shellexecute; FileName:"E:/DemoDir";
 	> 这样就不会出现中文名乱码了；
-3. 多站点配置
-	1. 首先打开httpd-vhosts.conf；添加想要添加的根目录及站点
+
+3. 修改Localhost默认端口
+	- 打开配置文件httpd.conf，找到 
+
+			Listen 0.0.0.0:80  ipv4
+			Listen [::0]:80	ipv6
+	修改其端口，如果开多端口，可以模仿上面的多加几个  
+	找到ServerName localhost:80;修改端口
+	- 打开配置文件httpd-vhosts.conf 修改localhost端口
+	> listen端口存在一样，apache开启不了
+4. 修改Wamp打开默认页 Localhost 和 PHPMyadmin 的端口
+	1. 打开wamp目录下wampmanager.tpl 和 wampmanager.ini文件
+	2. 找到
+	
+			Parameters: "http://localhost/"; Glyph: 5
+			Parameters: "http://localhost/phpmyadmin/"; Glyph: 5 
+	3. 改成
+	
+			Parameters: http://localhost:8080/; Glyph: 5
+			Parameters: "http://localhost:8080/phpmyadmin/"; Glyph: 5
+	改好之后要退出Wamp，重新打开启动配置才会生效。
+5. 多站点配置
+	1. 打开httpd-vhosts.conf；添加想要添加的根目录及站点
+
+			
+			<VirtualHost *:8080>
+				ServerName 域名
+				ServerAlias 二级域名
+				DocumentRoot "H:/"
+				<Directory  "H:/">
+					Options +Indexes +Includes +FollowSymLinks +MultiViews
+					AllowOverride All
+					Require all granted
+				</Directory>
+			</VirtualHost>
 		-  servername为站点名
 		-  documentroot为站点文件目录
-	2. 因为上面的httpd-vhosts.conf文件是扩展文件，默认下不会加载，打开apache下的httpd.conf文件，查找上面刚刚修改conf文件，去掉前面的注释#
-	3. 允许站点访问服务器资源。打开Apache->httpd.conf文件，找到onlineoffline tag,修改其后面的Deny from all为Allow from all，同时将Allow from 127.0.0.1修改为注释（前面加‘#’），在2.5版本中，修改httpd-vhosts.conf下不同站点的Require local为Require all granted。
+	2. 因为上面的httpd-vhosts.conf文件是扩展文件，打开apache下的httpd.conf文件，查找上面刚刚修改conf文件，有注释#去掉前面的注释#,也可以新建文件.conf文件，然后在httpd.conf中引入 `Include .conf`。在文件中添加网站，同上
+	3. 允许站点访问服务器资源。httpd.conf文件，onlineoffline tag下的Require local根据离线和在线自动切换,修改httpd-vhosts.conf下不同站点的Require local为Require all granted。
 
-			2.2使用Order Deny / Allow的方式，2.4改用Require
-			apache2.2：
-			Order deny,allow
-			Deny from all
-			apache2.4：
-			Require all denied
 			此处比较常用的有如下几种：
 			Require all denied允许所有否认(拒绝)
 			Require all granted允许所有授予
@@ -34,21 +61,9 @@
 			Require local 允许本地(默认配置)
 			注意：若有设定在htaccess文件中的也要修改
 
-	4. 设置本机访问这些站点时从本机获取资源，打开c:/windows/system32/drivers/etc/hosts在最后添加127.0.0.1  站点的域名
-4. 多端口多目录多站点设置
-	1. 直接在httpd-vhosts.conf中添加网站 加端口
-		
-			listen 8080
-			<VirtualHost *:8080>
-				ServerName 192.168.191.1
-				DocumentRoot "H:/"
-				<Directory  "H:/">
-					Options +Indexes +Includes +FollowSymLinks +MultiViews
-					AllowOverride All
-					Require all granted
-				</Directory>
-			</VirtualHost>
-	2. 新建文件.conf文件，然后在httpd.conf中引入 `Include .conf`。在文件中添加网站，同上。
+	4. 设置本机访问这些站点时从本机获取资源，打开c:/windows/system32/drivers/etc/hosts在最后添加
+	
+			127.0.0.1  站点的域名
 
 
 

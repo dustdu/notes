@@ -1,0 +1,11 @@
+作者：58招聘技术
+链接：https://www.zhihu.com/question/61064119/answer/183717717
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+其实不只是vue，react中在执行列表渲染时也会要求给每个组件添加上key这个属性。要解释key的作用，不得不先介绍一下虚拟DOM的Diff算法了。我们知道，vue和react都实现了一套虚拟DOM，使我们可以不直接操作DOM元素，只操作数据便可以重新渲染页面。而隐藏在背后的原理便是其高效的Diff算法。vue和react的虚拟DOM的Diff算法大致相同，其核心是基于两个简单的假设：1. 两个相同的组件产生类似的DOM结构，不同的组件产生不同的DOM结构。2. 同一层级的一组节点，他们可以通过唯一的id进行区分。基于以上这两点假设，使得虚拟DOM的Diff算法的复杂度从O(n^3)降到了O(n)。这里我们借用React’s diff algorithm中的一张图来简单说明一下：
+![](https://pic3.zhimg.com/50/v2-73120ff4c30dd81a128cd422e325786a_hd.png)
+<img src="https://pic3.zhimg.com/50/v2-73120ff4c30dd81a128cd422e325786a_hd.png" data-rawwidth="377" data-rawheight="199" class="content_image" width="377">当页面的数据发生变化时，Diff算法只会比较同一层级的节点：如果节点类型不同，直接干掉前面的节点，再创建并插入新的节点，不会再比较这个节点以后的子节点了。如果节点类型相同，则会重新设置该节点的属性，从而实现节点的更新。当某一层有很多相同的节点时，也就是列表节点时，Diff算法的更新过程默认情况下也是遵循以上原则。比如一下这个情况：
+![](https://pic2.zhimg.com/50/v2-6e88cc53a7e427f0ae8340cf930ac30d_hd.png)<img src="https://pic2.zhimg.com/50/v2-6e88cc53a7e427f0ae8340cf930ac30d_hd.png" data-rawwidth="477" data-rawheight="191" class="origin_image zh-lightbox-thumb" width="477" data-original="https://pic2.zhimg.com/v2-6e88cc53a7e427f0ae8340cf930ac30d_r.png">我们希望可以在B和C之间加一个F，Diff算法默认执行起来是这样的：
+![](https://pic2.zhimg.com/50/v2-bf76311258f100b789226ccbb2600071_hd.png)<img src="https://pic2.zhimg.com/50/v2-bf76311258f100b789226ccbb2600071_hd.png" data-rawwidth="572" data-rawheight="215" class="origin_image zh-lightbox-thumb" width="572" data-original="https://pic2.zhimg.com/v2-bf76311258f100b789226ccbb2600071_r.png">即把C更新成F，D更新成C，E更新成D，最后再插入E，是不是很没有效率？所以我们需要使用key来给每个节点做一个唯一标识，Diff算法就可以正确的识别此节点，找到正确的位置区插入新的节点。
+![](https://pic1.zhimg.com/50/v2-bb1147af7c458f0b09d6a3c2f74b0100_hd.png)<img src="https://pic1.zhimg.com/50/v2-bb1147af7c458f0b09d6a3c2f74b0100_hd.png" data-rawwidth="452" data-rawheight="130" class="origin_image zh-lightbox-thumb" width="452" data-original="https://pic1.zhimg.com/v2-bb1147af7c458f0b09d6a3c2f74b0100_r.png">所以一句话，key的作用主要是为了高效的更新虚拟DOM。另外vue中在使用相同标签名元素的过渡切换时，也会使用到key属性，其目的也是为了让vue可以区分它们，否则vue只会替换其内部属性而不会触发过渡效果。

@@ -76,3 +76,8 @@ zoomIn/zoomOut：Ctrl +/-
 显示 Output Ctrl+Shift+U
 其他
 自动保存：File -> AutoSave ，或者 Ctrl+Shift+P，输入 auto
+
+
+- 使用git之前要把git存储到环境变量
+- Git:ssh_exchange_identification: read: Software caused connection abort
+	- 连接中断，重新试一下

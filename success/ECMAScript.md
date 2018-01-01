@@ -10,7 +10,7 @@ thumbnail: /img/tipimg/ECMAScript.jpg
 ---
 ## 数据类型
 1. 标准划分
-	- 基本类型: number/string/boolean/undefined/null
+	- 基本类型: number/string/boolean/undefined/null/Symbol（ES6新增）
 	- 对象类型（复合类型）:object(包含Array)
 2. typeof(运算符,查看数据类型)
 	- number:

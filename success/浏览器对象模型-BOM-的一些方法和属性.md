@@ -7,16 +7,19 @@ tags:
     - BOM
 ---
 ## window对象
+
 - 表示浏览器中打开的窗口
 - 如果文档包含框架（frame 或 iframe 标签），浏览器会为 HTML 文档创建一个 window 对象，并为每个框架创建一个额外的 window 对象。
 - 没有应用于 window 对象的公开标准，不过所有浏览器都支持该对象。
 
 ### Window 对象集合
+
 |集合|	描述|
 |---|---|
 |frames[]	|返回窗口中所有命名的框架。<br>该集合是 Window 对象的数组，每个 Window 对象在窗口中含有一个框架或 `<iframe>`。属性 frames.length 存放数组 frames[] 中含有的元素个数。注意，frames[] 数组中引用的框架可能还包括框架，它们自己也具有 frames[] 数组。
 
 ### Window 对象属性
+
 |属性|	描述|
 |---|---|
 |closed|	返回窗口是否已被关闭。|
