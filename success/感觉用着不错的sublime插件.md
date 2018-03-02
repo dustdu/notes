@@ -6,8 +6,11 @@ tags:
     - sublime
     - 插件
 ---
+
 ## sublime插件
+
 ### Alignment
+
 - 代码对齐，写几个变量，选中这几行，Ctrl+Alt+A
 
 ### BracketHighlighter
