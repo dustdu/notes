@@ -140,14 +140,18 @@ tags:
 
 ### vscode_sync
 
-- token id : 98e2378e49c5d740aead9f45c2834f25f354802d
-- gist id : 6dbe0a085d990956d840a23e02759d60
+- token id : 6ee4f501996fb1c95aa9c1ebc2b46483fac0b40f
+- gist id : 49a23a093a78ea90e8cccd6461f9b2d3
 - （错误）Sync : Invalid / Expired GitHub Token. Please generate new token with scopes mentioned in readme. Exception Logged in Console.  
 	- 大部分是由于token id失效了，只需要重新生成一下token并保存在配置文件里面。复制重新生成好的token，修改配置文件Win下：C:\Users\Administrator\AppData\Roaming\Code\User，进入目录后，找到 syncLocalSettings.json 这个文件，查找token，并替换后面复制的值
 
 ### REST Client
 
 - 在编辑器中发送http请求，可直接得到结果，测试接口时很有用处，用法请看插件详情
+
+### .gitignore Generator
+
+- 修改.gitignore文件
 
 ## 遇到问题
 ### outFiles属性
